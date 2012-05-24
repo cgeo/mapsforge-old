@@ -243,6 +243,10 @@ public class MapDatabase {
 	public void executeQuery(Tile tile, MapDatabaseCallback mapDatabaseCallback) {
 		try {
 			prepareExecution();
+			// We haven't got a File
+			if (mapFileHeader == null) {
+				return;
+			}
 			QueryParameters queryParameters = new QueryParameters();
 			queryParameters.queryZoomLevel = this.mapFileHeader.getQueryZoomLevel(tile.zoomLevel);
 
