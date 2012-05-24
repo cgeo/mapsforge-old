@@ -1,0 +1,9 @@
+org.mapsforge.android
+org.mapsforge.android.maps
+org.mapsforge.android.maps.inputhandling
+org.mapsforge.android.maps.mapgenerator
+org.mapsforge.android.maps.mapgenerator.databaserenderer
+org.mapsforge.android.maps.mapgenerator.tiledownloader
+org.mapsforge.android.maps.overlay
+org.mapsforge.android.maps.rendertheme
+org.mapsforge.android.maps.rendertheme.renderinstruction

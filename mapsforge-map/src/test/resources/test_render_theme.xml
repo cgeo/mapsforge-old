@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rendertheme xmlns="http://mapsforge.org/renderTheme" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="1" map-background="#aabbcc">
+
+	<rule e="way" k="*" v="*">
+		<rule e="way" k="key1" v="value1" zoom-max="15">
+			<area fill="#001122" />
+		</rule>
+
+		<line stroke="#998877" stroke-width="0.123" />
+	</rule>
+
+	<rule e="node" k="key2" v="value2" zoom-min="16">
+		<caption k="name" font-style="bold" font-size="10" fill="#223344" stroke-width="4.321" />
+	</rule>
+</rendertheme>
