@@ -44,11 +44,14 @@ public final class Line implements RenderInstruction {
 	 *            the attributes of the XML element.
 	 * @param level
 	 *            the drawing level of this instruction.
+	 * @param relativePathPrefix
+	 *            the prefix for relative resource paths.
 	 * @return a new Line with the given rendering attributes.
 	 * @throws IOException
 	 *             if an I/O error occurs while reading a resource.
 	 */
-	public static Line create(String elementName, Attributes attributes, int level) throws IOException {
+	public static Line create(String elementName, Attributes attributes, int level, String relativePathPrefix)
+			throws IOException {
 		String src = null;
 		int stroke = Color.BLACK;
 		float strokeWidth = 0;
@@ -75,7 +78,7 @@ public final class Line implements RenderInstruction {
 		}
 
 		validate(strokeWidth);
-		return new Line(src, stroke, strokeWidth, strokeDasharray, strokeLinecap, level);
+		return new Line(relativePathPrefix, src, stroke, strokeWidth, strokeDasharray, strokeLinecap, level);
 	}
 
 	private static void validate(float strokeWidth) {
@@ -97,11 +100,11 @@ public final class Line implements RenderInstruction {
 	private final Paint paint;
 	private final float strokeWidth;
 
-	private Line(String src, int stroke, float strokeWidth, float[] strokeDasharray, Cap strokeLinecap, int level)
-			throws IOException {
+	private Line(String relativePathPrefix, String src, int stroke, float strokeWidth, float[] strokeDasharray,
+			Cap strokeLinecap, int level) throws IOException {
 		super();
 
-		Shader shader = BitmapUtils.createBitmapShader(src);
+		Shader shader = BitmapUtils.createBitmapShader(relativePathPrefix, src);
 
 		this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		this.paint.setShader(shader);

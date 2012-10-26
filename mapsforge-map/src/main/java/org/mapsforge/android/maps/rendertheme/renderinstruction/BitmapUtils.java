@@ -29,42 +29,57 @@ final class BitmapUtils {
 	private static final String PREFIX_FILE = "file:";
 	private static final String PREFIX_JAR = "jar:";
 
-	private static InputStream createInputStream(String src) throws FileNotFoundException {
+	private static InputStream createInputStream(String relativePathPrefix, String src) throws FileNotFoundException {
 		if (src.startsWith(PREFIX_JAR)) {
-			String name = src.substring(PREFIX_JAR.length());
-			InputStream inputStream = BitmapUtils.class.getResourceAsStream(name);
+			String absoluteName = getAbsoluteName(relativePathPrefix, src.substring(PREFIX_JAR.length()));
+			InputStream inputStream = BitmapUtils.class.getResourceAsStream(absoluteName);
 			if (inputStream == null) {
-				throw new FileNotFoundException("resource not found: " + src);
+				throw new FileNotFoundException("resource not found: " + absoluteName);
 			}
 			return inputStream;
 		} else if (src.startsWith(PREFIX_FILE)) {
-			File file = new File(src.substring(PREFIX_FILE.length()));
+			File file = getFile(relativePathPrefix, src.substring(PREFIX_FILE.length()));
 			if (!file.exists()) {
-				throw new IllegalArgumentException("file does not exist: " + src);
+				throw new IllegalArgumentException("file does not exist: " + file);
 			} else if (!file.isFile()) {
-				throw new IllegalArgumentException("not a file: " + src);
+				throw new IllegalArgumentException("not a file: " + file);
 			} else if (!file.canRead()) {
-				throw new IllegalArgumentException("cannot read file: " + src);
+				throw new IllegalArgumentException("cannot read file: " + file);
 			}
 			return new FileInputStream(file);
 		}
+
 		throw new IllegalArgumentException("invalid bitmap source: " + src);
 	}
 
-	static Bitmap createBitmap(String src) throws IOException {
+	private static String getAbsoluteName(String relativePathPrefix, String name) {
+		if (name.charAt(0) == '/') {
+			return name;
+		}
+		return relativePathPrefix + name;
+	}
+
+	private static File getFile(String parentPath, String pathName) {
+		if (pathName.charAt(0) == File.separatorChar) {
+			return new File(pathName);
+		}
+		return new File(parentPath, pathName);
+	}
+
+	static Bitmap createBitmap(String relativePathPrefix, String src) throws IOException {
 		if (src == null || src.length() == 0) {
 			// no image source defined
 			return null;
 		}
 
-		InputStream inputStream = createInputStream(src);
+		InputStream inputStream = createInputStream(relativePathPrefix, src);
 		Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
 		inputStream.close();
 		return bitmap;
 	}
 
-	static BitmapShader createBitmapShader(String src) throws IOException {
-		Bitmap bitmap = BitmapUtils.createBitmap(src);
+	static BitmapShader createBitmapShader(String relativePathPrefix, String src) throws IOException {
+		Bitmap bitmap = BitmapUtils.createBitmap(relativePathPrefix, src);
 		if (bitmap == null) {
 			return null;
 		}

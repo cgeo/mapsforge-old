@@ -75,6 +75,11 @@ public class ExternalRenderTheme implements JobTheme {
 	}
 
 	@Override
+	public String getRelativePathPrefix() {
+		return this.renderThemeFile.getParent();
+	}
+
+	@Override
 	public InputStream getRenderThemeAsStream() throws FileNotFoundException {
 		return new FileInputStream(this.renderThemeFile);
 	}

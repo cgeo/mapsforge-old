@@ -33,11 +33,14 @@ public final class Symbol implements RenderInstruction {
 	 *            the name of the XML element.
 	 * @param attributes
 	 *            the attributes of the XML element.
+	 * @param relativePathPrefix
+	 *            the prefix for relative resource paths.
 	 * @return a new Symbol with the given rendering attributes.
 	 * @throws IOException
 	 *             if an I/O error occurs while reading a resource.
 	 */
-	public static Symbol create(String elementName, Attributes attributes) throws IOException {
+	public static Symbol create(String elementName, Attributes attributes, String relativePathPrefix)
+			throws IOException {
 		String src = null;
 
 		for (int i = 0; i < attributes.getLength(); ++i) {
@@ -52,7 +55,7 @@ public final class Symbol implements RenderInstruction {
 		}
 
 		validate(elementName, src);
-		return new Symbol(src);
+		return new Symbol(relativePathPrefix, src);
 	}
 
 	private static void validate(String elementName, String src) {
@@ -63,10 +66,10 @@ public final class Symbol implements RenderInstruction {
 
 	private final Bitmap bitmap;
 
-	private Symbol(String src) throws IOException {
+	private Symbol(String relativePathPrefix, String src) throws IOException {
 		super();
 
-		this.bitmap = BitmapUtils.createBitmap(src);
+		this.bitmap = BitmapUtils.createBitmap(relativePathPrefix, src);
 	}
 
 	@Override

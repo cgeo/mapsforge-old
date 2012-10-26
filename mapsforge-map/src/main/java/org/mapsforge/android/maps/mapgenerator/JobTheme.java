@@ -23,6 +23,11 @@ import java.io.Serializable;
  */
 public interface JobTheme extends Serializable {
 	/**
+	 * @return the prefix for all relative resource paths.
+	 */
+	String getRelativePathPrefix();
+
+	/**
 	 * @return an InputStream to read the render theme data from.
 	 * @throws FileNotFoundException
 	 *             if the render theme file cannot be found.

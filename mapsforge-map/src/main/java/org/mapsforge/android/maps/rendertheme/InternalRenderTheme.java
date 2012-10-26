@@ -27,16 +27,23 @@ public enum InternalRenderTheme implements JobTheme {
 	 * 
 	 * @see <a href="http://wiki.openstreetmap.org/wiki/Osmarender">Osmarender</a>
 	 */
-	OSMARENDER("/org/mapsforge/android/maps/rendertheme/osmarender/osmarender.xml");
+	OSMARENDER("/org/mapsforge/android/maps/rendertheme/osmarender/", "osmarender.xml");
 
-	private final String path;
+	private final String absolutePath;
+	private final String file;
 
-	private InternalRenderTheme(String path) {
-		this.path = path;
+	private InternalRenderTheme(String absolutePath, String file) {
+		this.absolutePath = absolutePath;
+		this.file = file;
+	}
+
+	@Override
+	public String getRelativePathPrefix() {
+		return this.absolutePath;
 	}
 
 	@Override
 	public InputStream getRenderThemeAsStream() {
-		return Thread.currentThread().getClass().getResourceAsStream(this.path);
+		return Thread.currentThread().getClass().getResourceAsStream(this.absolutePath + this.file);
 	}
 }

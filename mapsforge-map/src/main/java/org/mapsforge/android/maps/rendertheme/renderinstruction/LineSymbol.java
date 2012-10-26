@@ -33,11 +33,14 @@ public final class LineSymbol implements RenderInstruction {
 	 *            the name of the XML element.
 	 * @param attributes
 	 *            the attributes of the XML element.
+	 * @param relativePathPrefix
+	 *            the prefix for relative resource paths.
 	 * @return a new LineSymbol with the given rendering attributes.
 	 * @throws IOException
 	 *             if an I/O error occurs while reading a resource.
 	 */
-	public static LineSymbol create(String elementName, Attributes attributes) throws IOException {
+	public static LineSymbol create(String elementName, Attributes attributes, String relativePathPrefix)
+			throws IOException {
 		String src = null;
 		boolean alignCenter = false;
 		boolean repeat = false;
@@ -58,7 +61,7 @@ public final class LineSymbol implements RenderInstruction {
 		}
 
 		validate(elementName, src);
-		return new LineSymbol(src, alignCenter, repeat);
+		return new LineSymbol(relativePathPrefix, src, alignCenter, repeat);
 	}
 
 	private static void validate(String elementName, String src) {
@@ -71,10 +74,10 @@ public final class LineSymbol implements RenderInstruction {
 	private final Bitmap bitmap;
 	private final boolean repeat;
 
-	private LineSymbol(String src, boolean alignCenter, boolean repeat) throws IOException {
+	private LineSymbol(String relativePathPrefix, String src, boolean alignCenter, boolean repeat) throws IOException {
 		super();
 
-		this.bitmap = BitmapUtils.createBitmap(src);
+		this.bitmap = BitmapUtils.createBitmap(relativePathPrefix, src);
 		this.alignCenter = alignCenter;
 		this.repeat = repeat;
 	}

@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.mapsforge.android.maps.mapgenerator.JobTheme;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.Area;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.Caption;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.Circle;
@@ -30,6 +31,7 @@ import org.mapsforge.android.maps.rendertheme.renderinstruction.Line;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.LineSymbol;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.PathText;
 import org.mapsforge.android.maps.rendertheme.renderinstruction.Symbol;
+import org.mapsforge.core.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -40,7 +42,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * SAX2 handler to parse XML render theme files.
  */
-public class RenderThemeHandler extends DefaultHandler {
+public final class RenderThemeHandler extends DefaultHandler {
 	private static enum Element {
 		RENDER_THEME, RENDERING_INSTRUCTION, RULE;
 	}
@@ -51,8 +53,8 @@ public class RenderThemeHandler extends DefaultHandler {
 	private static final String UNEXPECTED_ELEMENT = "unexpected element: ";
 
 	/**
-	 * @param inputStream
-	 *            an input stream containing valid render theme XML data.
+	 * @param jobTheme
+	 *            the JobTheme to create a RenderTheme from.
 	 * @return a new RenderTheme which is created by parsing the XML data from the input stream.
 	 * @throws SAXException
 	 *             if an error occurs while parsing the render theme XML.
@@ -61,13 +63,19 @@ public class RenderThemeHandler extends DefaultHandler {
 	 * @throws IOException
 	 *             if an I/O error occurs while reading from the input stream.
 	 */
-	public static RenderTheme getRenderTheme(InputStream inputStream) throws SAXException,
-			ParserConfigurationException, IOException {
-		RenderThemeHandler renderThemeHandler = new RenderThemeHandler();
+	public static RenderTheme getRenderTheme(JobTheme jobTheme) throws SAXException, ParserConfigurationException,
+			IOException {
+		RenderThemeHandler renderThemeHandler = new RenderThemeHandler(jobTheme.getRelativePathPrefix());
 		XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
 		xmlReader.setContentHandler(renderThemeHandler);
-		xmlReader.parse(new InputSource(inputStream));
-		return renderThemeHandler.renderTheme;
+		InputStream inputStream = null;
+		try {
+			inputStream = jobTheme.getRenderThemeAsStream();
+			xmlReader.parse(new InputSource(inputStream));
+			return renderThemeHandler.renderTheme;
+		} finally {
+			IOUtils.closeQuietly(inputStream);
+		}
 	}
 
 	/**
@@ -98,8 +106,14 @@ public class RenderThemeHandler extends DefaultHandler {
 	private Rule currentRule;
 	private final Stack<Element> elementStack = new Stack<Element>();
 	private int level;
+	private final String relativePathPrefix;
 	private RenderTheme renderTheme;
 	private final Stack<Rule> ruleStack = new Stack<Rule>();
+
+	private RenderThemeHandler(String relativePathPrefix) {
+		super();
+		this.relativePathPrefix = relativePathPrefix;
+	}
 
 	@Override
 	public void endDocument() {
@@ -150,7 +164,7 @@ public class RenderThemeHandler extends DefaultHandler {
 
 			else if ("area".equals(localName)) {
 				checkState(localName, Element.RENDERING_INSTRUCTION);
-				Area area = Area.create(localName, attributes, this.level++);
+				Area area = Area.create(localName, attributes, this.level++, this.relativePathPrefix);
 				this.ruleStack.peek().addRenderingInstruction(area);
 			}
 
@@ -168,13 +182,13 @@ public class RenderThemeHandler extends DefaultHandler {
 
 			else if ("line".equals(localName)) {
 				checkState(localName, Element.RENDERING_INSTRUCTION);
-				Line line = Line.create(localName, attributes, this.level++);
+				Line line = Line.create(localName, attributes, this.level++, this.relativePathPrefix);
 				this.currentRule.addRenderingInstruction(line);
 			}
 
 			else if ("lineSymbol".equals(localName)) {
 				checkState(localName, Element.RENDERING_INSTRUCTION);
-				LineSymbol lineSymbol = LineSymbol.create(localName, attributes);
+				LineSymbol lineSymbol = LineSymbol.create(localName, attributes, this.relativePathPrefix);
 				this.currentRule.addRenderingInstruction(lineSymbol);
 			}
 
@@ -186,7 +200,7 @@ public class RenderThemeHandler extends DefaultHandler {
 
 			else if ("symbol".equals(localName)) {
 				checkState(localName, Element.RENDERING_INSTRUCTION);
-				Symbol symbol = Symbol.create(localName, attributes);
+				Symbol symbol = Symbol.create(localName, attributes, this.relativePathPrefix);
 				this.currentRule.addRenderingInstruction(symbol);
 			}
 

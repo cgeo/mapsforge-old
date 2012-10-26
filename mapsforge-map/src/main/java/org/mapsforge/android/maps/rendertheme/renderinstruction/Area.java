@@ -39,11 +39,14 @@ public final class Area implements RenderInstruction {
 	 *            the attributes of the XML element.
 	 * @param level
 	 *            the drawing level of this instruction.
+	 * @param relativePathPrefix
+	 *            the prefix for relative resource paths.
 	 * @return a new Area with the given rendering attributes.
 	 * @throws IOException
 	 *             if an I/O error occurs while reading a resource.
 	 */
-	public static Area create(String elementName, Attributes attributes, int level) throws IOException {
+	public static Area create(String elementName, Attributes attributes, int level, String relativePathPrefix)
+			throws IOException {
 		String src = null;
 		int fill = Color.BLACK;
 		int stroke = Color.TRANSPARENT;
@@ -67,7 +70,7 @@ public final class Area implements RenderInstruction {
 		}
 
 		validate(strokeWidth);
-		return new Area(src, fill, stroke, strokeWidth, level);
+		return new Area(relativePathPrefix, src, fill, stroke, strokeWidth, level);
 	}
 
 	private static void validate(float strokeWidth) {
@@ -81,10 +84,11 @@ public final class Area implements RenderInstruction {
 	private final Paint outline;
 	private final float strokeWidth;
 
-	private Area(String src, int fill, int stroke, float strokeWidth, int level) throws IOException {
+	private Area(String relativePathPrefix, String src, int fill, int stroke, float strokeWidth, int level)
+			throws IOException {
 		super();
 
-		Shader shader = BitmapUtils.createBitmapShader(src);
+		Shader shader = BitmapUtils.createBitmapShader(relativePathPrefix, src);
 
 		if (fill == Color.TRANSPARENT) {
 			this.fill = null;
