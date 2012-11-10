@@ -52,6 +52,16 @@ final class BitmapUtils {
 		throw new IllegalArgumentException("invalid bitmap source: " + src);
 	}
 
+	/**
+	 * Gets the absolute resource name. If it does not start with a '/' it will be interpreted relative to the given
+	 * prefix.
+	 * 
+	 * @param relativePathPrefix
+	 *            Prefix for relative resource paths
+	 * @param name
+	 *            Absolute or relative resource path
+	 * @return Absolute resource path
+	 */
 	private static String getAbsoluteName(String relativePathPrefix, String name) {
 		if (name.charAt(0) == '/') {
 			return name;
@@ -59,10 +69,16 @@ final class BitmapUtils {
 		return relativePathPrefix + name;
 	}
 
+	/**
+	 * Get the file relative to the parentPath
+	 * 
+	 * @param parentPath
+	 *            Common source path for all files in a theme
+	 * @param pathName
+	 *            Sub-path and file name to get
+	 * @return File pointing to the supplied location
+	 */
 	private static File getFile(String parentPath, String pathName) {
-		if (pathName.charAt(0) == File.separatorChar) {
-			return new File(pathName);
-		}
 		return new File(parentPath, pathName);
 	}
 
