@@ -138,7 +138,7 @@ public class InMemoryTileCache implements TileCache {
 			}
 
 			Bitmap pooledBitmap = this.bitmapPool.remove(this.bitmapPool.size() - 1);
-
+      this.byteBuffer.rewind();
 			bitmap.copyPixelsToBuffer(this.byteBuffer);
 			this.byteBuffer.rewind();
 			pooledBitmap.copyPixelsFromBuffer(this.byteBuffer);
