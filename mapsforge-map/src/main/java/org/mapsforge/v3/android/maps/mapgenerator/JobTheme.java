@@ -12,27 +12,25 @@
  * You should have received a copy of the GNU Lesser General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.mapsforge.android.maps.mapgenerator.tiledownloader;
+package org.mapsforge.v3.android.maps.mapgenerator;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.TileDownloader;
-import org.mapsforge.v3.core.Tile;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.Serializable;
 
 /**
- * Tests the {@link MapnikTileDownloader} class.
+ * A JobTheme defines the render theme which is used for a {@link MapGeneratorJob}.
  */
-public class MapnikTileDownloaderTest {
+public interface JobTheme extends Serializable {
 	/**
-	 * Tests the {@link MapnikTileDownloader#getTilePath} method.
+	 * @return the prefix for all relative resource paths.
 	 */
-	@Test
-	public void getTilePathTest() {
-		TileDownloader tileDownloader = new MapnikTileDownloader();
-		Tile tile = new Tile(1, 2, (byte) 3);
-		String tilePath = tileDownloader.getTilePath(tile);
-		Assert.assertEquals("/3/1/2.png", tilePath);
-	}
+	String getRelativePathPrefix();
+
+	/**
+	 * @return an InputStream to read the render theme data from.
+	 * @throws FileNotFoundException
+	 *             if the render theme file cannot be found.
+	 */
+	InputStream getRenderThemeAsStream() throws FileNotFoundException;
 }

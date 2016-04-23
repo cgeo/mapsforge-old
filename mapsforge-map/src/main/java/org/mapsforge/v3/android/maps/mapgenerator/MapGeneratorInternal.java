@@ -12,27 +12,28 @@
  * You should have received a copy of the GNU Lesser General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.mapsforge.android.maps.mapgenerator.tiledownloader;
-
-import junit.framework.Assert;
-
-import org.junit.Test;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.TileDownloader;
-import org.mapsforge.v3.core.Tile;
+package org.mapsforge.v3.android.maps.mapgenerator;
 
 /**
- * Tests the {@link MapnikTileDownloader} class.
+ * Enumeration of all internal MapGenerator implementations.
  */
-public class MapnikTileDownloaderTest {
+public enum MapGeneratorInternal {
 	/**
-	 * Tests the {@link MapnikTileDownloader#getTilePath} method.
+	 * Map tiles are rendered offline.
 	 */
-	@Test
-	public void getTilePathTest() {
-		TileDownloader tileDownloader = new MapnikTileDownloader();
-		Tile tile = new Tile(1, 2, (byte) 3);
-		String tilePath = tileDownloader.getTilePath(tile);
-		Assert.assertEquals("/3/1/2.png", tilePath);
-	}
+	DATABASE_RENDERER,
+
+	/**
+	 * Map tiles are downloaded from the Mapnik server.
+	 * 
+	 * @see <a href="http://wiki.openstreetmap.org/wiki/Mapnik">Mapnik</a>
+	 */
+	MAPNIK,
+
+	/**
+	 * Map tiles are downloaded from the OpenCycleMap server.
+	 * 
+	 * @see <a href="http://opencyclemap.org/">OpenCycleMap</a>
+	 */
+	OPENCYCLEMAP;
 }

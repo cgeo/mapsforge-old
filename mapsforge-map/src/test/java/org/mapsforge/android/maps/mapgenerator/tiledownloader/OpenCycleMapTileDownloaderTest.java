@@ -17,7 +17,9 @@ package org.mapsforge.android.maps.mapgenerator.tiledownloader;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.mapsforge.core.Tile;
+import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.OpenCycleMapTileDownloader;
+import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.TileDownloader;
+import org.mapsforge.v3.core.Tile;
 
 /**
  * Tests the {@link OpenCycleMapTileDownloader} class.

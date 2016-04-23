@@ -12,27 +12,27 @@
  * You should have received a copy of the GNU Lesser General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.mapsforge.android.maps.mapgenerator.tiledownloader;
+package org.mapsforge.v3.android.maps.rendertheme.renderinstruction;
 
-import junit.framework.Assert;
+enum FontStyle {
+	BOLD, BOLD_ITALIC, ITALIC, NORMAL;
 
-import org.junit.Test;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.TileDownloader;
-import org.mapsforge.v3.core.Tile;
-
-/**
- * Tests the {@link MapnikTileDownloader} class.
- */
-public class MapnikTileDownloaderTest {
 	/**
-	 * Tests the {@link MapnikTileDownloader#getTilePath} method.
+	 * @return the constant int value of this FontStyle.
+	 * @see <a href="http://developer.android.com/reference/android/graphics/Typeface.html">Typeface</a>
 	 */
-	@Test
-	public void getTilePathTest() {
-		TileDownloader tileDownloader = new MapnikTileDownloader();
-		Tile tile = new Tile(1, 2, (byte) 3);
-		String tilePath = tileDownloader.getTilePath(tile);
-		Assert.assertEquals("/3/1/2.png", tilePath);
+	int toInt() {
+		switch (this) {
+			case BOLD:
+				return 1;
+			case BOLD_ITALIC:
+				return 3;
+			case ITALIC:
+				return 2;
+			case NORMAL:
+				return 0;
+		}
+
+		throw new IllegalArgumentException("unknown enum value: " + this);
 	}
 }

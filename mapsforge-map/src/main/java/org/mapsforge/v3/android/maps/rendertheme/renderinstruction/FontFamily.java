@@ -12,27 +12,31 @@
  * You should have received a copy of the GNU Lesser General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.mapsforge.android.maps.mapgenerator.tiledownloader;
+package org.mapsforge.v3.android.maps.rendertheme.renderinstruction;
 
-import junit.framework.Assert;
+import android.graphics.Typeface;
 
-import org.junit.Test;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
-import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.TileDownloader;
-import org.mapsforge.v3.core.Tile;
+enum FontFamily {
+	DEFAULT, DEFAULT_BOLD, MONOSPACE, SANS_SERIF, SERIF;
 
-/**
- * Tests the {@link MapnikTileDownloader} class.
- */
-public class MapnikTileDownloaderTest {
 	/**
-	 * Tests the {@link MapnikTileDownloader#getTilePath} method.
+	 * @return the typeface object of this FontFamily.
+	 * @see <a href="http://developer.android.com/reference/android/graphics/Typeface.html">Typeface</a>
 	 */
-	@Test
-	public void getTilePathTest() {
-		TileDownloader tileDownloader = new MapnikTileDownloader();
-		Tile tile = new Tile(1, 2, (byte) 3);
-		String tilePath = tileDownloader.getTilePath(tile);
-		Assert.assertEquals("/3/1/2.png", tilePath);
+	Typeface toTypeface() {
+		switch (this) {
+			case DEFAULT:
+				return Typeface.DEFAULT;
+			case DEFAULT_BOLD:
+				return Typeface.DEFAULT_BOLD;
+			case MONOSPACE:
+				return Typeface.MONOSPACE;
+			case SANS_SERIF:
+				return Typeface.SANS_SERIF;
+			case SERIF:
+				return Typeface.SERIF;
+		}
+
+		throw new IllegalArgumentException("unknown enum value: " + this);
 	}
 }
