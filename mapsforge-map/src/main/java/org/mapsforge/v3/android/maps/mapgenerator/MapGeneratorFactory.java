@@ -14,11 +14,12 @@
  */
 package org.mapsforge.v3.android.maps.mapgenerator;
 
+import android.util.AttributeSet;
+
 import org.mapsforge.v3.android.maps.mapgenerator.databaserenderer.DatabaseRenderer;
 import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.MapnikTileDownloader;
 import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.OpenCycleMapTileDownloader;
-
-import android.util.AttributeSet;
+import org.mapsforge.v3.android.maps.mapgenerator.tiledownloader.ThunderforestTileDownloader;
 
 /**
  * A factory for the internal MapGenerator implementations.
@@ -54,6 +55,8 @@ public final class MapGeneratorFactory {
 				return new MapnikTileDownloader();
 			case OPENCYCLEMAP:
 				return new OpenCycleMapTileDownloader();
+			case THUNDERFOREST:
+				return new ThunderforestTileDownloader();
 		}
 
 		throw new IllegalArgumentException("unknown enum value: " + mapGeneratorInternal);

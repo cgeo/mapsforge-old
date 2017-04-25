@@ -35,5 +35,13 @@ public enum MapGeneratorInternal {
 	 * 
 	 * @see <a href="http://opencyclemap.org/">OpenCycleMap</a>
 	 */
-	OPENCYCLEMAP;
+	OPENCYCLEMAP,
+
+	/**
+	 * Map tiles are downloaded from the Thunderforest (OpenCycleMap) server.
+	 *
+	 * @see <a href="http://thunderforest.com/">Thunderforest</a>
+	 */
+	THUNDERFOREST;
+
 }
