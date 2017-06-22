@@ -24,10 +24,11 @@ public class ThunderforestTileDownloader extends TileDownloader {
 	private static final String PROTOCOL = "https";
 	private static final byte ZOOM_MAX = 22;
 
+	private String apiKey = null;
 	private final StringBuilder stringBuilder;
 
 	/**
-	 * Constructs a new OpenCycleMapTileDownloader.
+	 * Constructs a new ThunderforestTileDownloader.
 	 */
 	public ThunderforestTileDownloader() {
 		super();
@@ -53,9 +54,17 @@ public class ThunderforestTileDownloader extends TileDownloader {
 		this.stringBuilder.append(tile.tileX);
 		this.stringBuilder.append('/');
 		this.stringBuilder.append(tile.tileY);
-		this.stringBuilder.append(".png?apikey=d6866308a6e24783822338c9a49ceb6c");
+		this.stringBuilder.append(".png");
+		if (apiKey != null && apiKey.length() > 0) {
+			this.stringBuilder.append("?apikey=");
+			this.stringBuilder.append(apiKey);
+		}
 
 		return this.stringBuilder.toString();
+	}
+
+	public void setApiKey(final String apiKey) {
+		this.apiKey = apiKey;
 	}
 
 	@Override
