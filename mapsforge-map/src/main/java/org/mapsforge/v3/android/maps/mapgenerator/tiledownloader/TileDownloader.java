@@ -17,6 +17,7 @@ package org.mapsforge.v3.android.maps.mapgenerator.tiledownloader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,7 @@ public abstract class TileDownloader implements MapGenerator {
 	private static final Byte START_ZOOM_LEVEL = Byte.valueOf((byte) 5);
 
 	private final int[] pixels;
+	private String userAgent = null;
 
 	/**
 	 * Default constructor that must be called by subclasses.
@@ -56,7 +58,11 @@ public abstract class TileDownloader implements MapGenerator {
 		try {
 			Tile tile = mapGeneratorJob.tile;
 			URL url = new URL(getProtocol(), getHostName(), getTilePath(tile));
-			InputStream inputStream = url.openStream();
+			URLConnection urlConnection = url.openConnection();
+			if(getUserAgent() != null) {
+				urlConnection.setRequestProperty("User-Agent", getUserAgent());
+			}
+			InputStream inputStream = urlConnection.getInputStream();
 			Bitmap decodedBitmap = BitmapFactory.decodeStream(inputStream);
 			inputStream.close();
 
@@ -99,6 +105,14 @@ public abstract class TileDownloader implements MapGenerator {
 	@Override
 	public final Byte getStartZoomLevel() {
 		return START_ZOOM_LEVEL;
+	}
+
+	public void setUserAgent(final String userAgent) {
+		this.userAgent = userAgent;
+	}
+
+	public String getUserAgent() {
+		return this.userAgent;
 	}
 
 	/**
